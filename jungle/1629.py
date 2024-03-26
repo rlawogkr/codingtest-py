@@ -3,14 +3,15 @@ input = sys.stdin.readline
 
 a, b, c = map(int, input().rstrip().split())
 
-def multi (a,n):
-  if n == 1:
-      return a%c
-  else:
-      tmp = multi(a,n//2)
-      if n %2 ==0:
-          return (tmp * tmp) % c
-      else:
-          return (tmp  * tmp *a) %c
+def multi(a,b,c):
+    if b == 1:
+        return a%c
+    tmp = multi(a,b//2,c)
+    
+    if b%2 == 0: #b가 짝수일 경우
+        return tmp * tmp % c
+    else: #b가 홀수일 경우
+        return tmp * tmp * a % c
+
+print(multi(a,b,c))
           
-print(multi(a,b))

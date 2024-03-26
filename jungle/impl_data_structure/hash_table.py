@@ -1,44 +1,67 @@
-class HashTable:
-    def __init__(self, size):
-        self.size = size
-        self.table = [[] for _ in range(size)]
+from __future__ import annotations
+from typing import Any,Type
+import hashlib
 
-    # 해시 함수: key에 대해 해시 값을 리턴
-    def _hash_function(self, key):
-        return hash(key) % self.size
+class Node:
+    def __init__(self, key, value, next: Node) -> None:
+        self.key = key
+        self.value = value
+        self.next = next #뒤쪽 노드를 참조
 
-    def insert(self, key, value):
-        hash_key = self._hash_function(key)
-        for pair in self.table[hash_key]:
-            if pair[0] == key:
-                pair[1] = value
-                return
-        self.table[hash_key].append([key, value])
+class ChainedHash:
+    def __init__(self, capacity: int) -> None:
+        self.capacity = capacity
+        self.table = [None] * self.capacity
 
-    def search(self, key):
-        hash_key = self._hash_function(key)
-        for pair in self.table[hash_key]:
-            if pair[0] == key:
-                return pair[1]
+    def hash_value(self, key: Any) -> int:
+        if isinstance(key, int):
+            return key % self.capacity
+        return(int(hashlib.sha256(str(key).encode()).hexdigest(), 16) % self.capacity)
+
+    def search(self, key: Any) -> Any:
+        hash = self.hash_value(key)
+        p = self.table[hash] #해당 해시값에 대한 연결리스트의 첫번째 노드를 참조
+
+        while p is not None:
+            if p.key == key: 
+                return p.value #key에 해당하는 값이 있을 경우 그 값 리턴
+            p = p.next
         return None
 
-    def delete(self, key):
-        hash_key = self._hash_function(key)
-        for i, pair in enumerate(self.table[hash_key]):
-            if pair[0] == key:
-                del self.table[hash_key][i]
-                return
+    def add(self, key: Any, value: Any) -> bool:
+        hash = self.hash_value(key)
+        p = self.table[hash] #해시값을 가진 노드를 참조
 
-# 예시로 해시 테이블을 사용해보겠습니다.
-hash_table = HashTable(10)
-hash_table.insert("apple", 5)
-hash_table.insert("banana", 10)
+        while p is not None:
+            if p.key == key:
+                return False #이미 key가 존재하므로 실패
+            p = p.next
 
-print(hash_table.search("apple"))  # 출력: 5
-print(hash_table.search("banana"))  # 출력: 10
+        temp = Node(key, value, self.table[hash]) #해당 키에 값이 없을 경우 새로운 노드를 만들어서 연결리스트의 맨 앞에 추가
+        self.table[hash] = temp
+        return True
 
-hash_table.insert("apple", 7)  # 이미 존재하는 키에 대해 값을 업데이트합니다.
-print(hash_table.search("apple"))  # 출력: 7
+    def remove(self, key: Any) -> bool:
+        hash = self.hash_value(key)
+        p = self.table[hash]
+        pp = None
 
-hash_table.delete("banana")
-print(hash_table.search("banana"))  # 출력: None (삭제된 키)
+        while p is not None:
+            if p.key == key:
+                if pp is None:
+                    self.table[hash] = p.next
+                else:
+                    pp.next = p.next
+                return True
+            pp = p
+            p = p.next
+        return False
+
+    def dump(self) -> None:
+        for i in range(self.capacity):
+            p = self.table[i]
+            print(i, end = '')
+            while p is not None:
+                print(f' -> {p.key} ({p.value})', end = '')
+                p = p.next
+            print()
