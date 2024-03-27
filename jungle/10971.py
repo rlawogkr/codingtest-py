@@ -1,33 +1,27 @@
 import sys
-
 input = sys.stdin.readline
+N = int(input().rstrip())
+W = []
+for _ in range(N):
+    _arr = list(map(int, input().rstrip().split()))
+    W.append(_arr)
 
-n = int(input().rstrip())
-
-_list = [[0]*n for _ in range(n)]
-_visited = []
+visited = []
 _min = sys.maxsize
-
-#시작 지점, 끝 지점, 더해가는 거리(깊이에 따라 값을 더해갈 예정)
-def dfs(st, dest, weight, _visited):
+def dfs(st, en, cost, visited):
     global _min
-    if len(_visited) == n:
-        if _list[dest][st]: 
-            _min = min(_min, weight + _list[dest][st])
-            return
+    if len(visited) == N:
+        if W[en][st]:
+            _min = min(_min, cost + W[en][st])
+        return
     
-    for i in range(n):
-        if _list[dest][i] and i not in _visited and weight < _min:
-            _visited.append(i)
-            dfs(st,i,weight + _list[dest][i], _visited)
-            _visited.pop()
+    for i in range(N):
+        if W[en][i] and i not in visited:
+            visited.append(i)
+            dfs(st, i, cost + W[en][i], visited)
+            visited.pop()
 
-#값 입력
-for i in range(n):
-    for j,val in enumerate(map(int, input().rstrip().split())):
-        _list[i][j] = val
-
-for i in range(n):
+for i in range(N):
     dfs(i,i,0,[i])
-
 print(_min)
+
