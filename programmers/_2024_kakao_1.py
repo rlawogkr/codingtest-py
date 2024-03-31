@@ -17,7 +17,7 @@ def solution(friends, gifts):
         gift_idx[f] -= 1
     
     # 각자 받게 될 선물 개수
-    will_get = [0 for _ in friends] # friends 리스트 순서대로 저장
+    will_get = [0 for _ in friends] # friends 리스트 순서대로 저장
     for i in range(len(friends)):
         curr = friends[i] # 인덱스 i에 해당하는 친구
         for j in range(i+1, len(friends)):
