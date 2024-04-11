@@ -1,53 +1,56 @@
-import sys
-from collections import deque
+di = [-1,0,1,0]
+dj = [0,1,0,-1]
+cctv = [[], [1],[1,3],[0,1],[0,1,3],[0,1,2,3]]
+def cal(tlst):
+    v = [[0]*(M+2) for _ in range(N+2)]
 
-def input():
-    return sys.stdin.readline().rstrip()
+    # 모든 CCTV에 대해서 처리(좌표, type, rot)
+    for i in range(CNT):
+        si,sj = lst[i]      # 1~N, 1~M
+        rot = tlst[i]       # 0~3
+        type = arr[si][sj]  # 1~5
 
-#cctv는 방향에 있는 칸 전체를 감시할 수 있음.
-#cctv는 벽을 통과할 수 없음.
-#0: 빈칸, 6: 벽, 회전: 90도 방향
-#1~5: cctv 번호.
-
-#cctv의 방향을 적절히 정해, 사각지대의 최소 크기를 구하기
-N, M = map(int, input().split()) #row, col
-graph = [list(map(int, input().split())) for _ in range(N)]
-
-total_count = N*M
-dy = [0,1,0,-1]
-dx = [1,0,-1,0]
-dir = 0 # 방향, 90도로 변함.
-
-#좌표값, 방향. 1을 마주쳤을 때.
-def bfs_1(i, j, dir):
-    q = deque()
-    q.append((i,j)) #y,x
-    
-    while q:
-        y, x = q.popleft()
-        for k in range(4):
-            n_y = y + dy[k]
-            n_x = x + dx[k]
-            if 0 <= n_x < M and 0<= n_y < N:
-                # 감시카메라일때
-                if 1 <= graph[n_y][n_x] < 6:
-                    q.append((n_y, n_x))
-                # 벽일 경우
-                elif graph[n_y][n_x] == 6:
+        # type에 따른 모든 방향을 뻗어가면서 v[] 1표시
+        for dr in cctv[type]:
+            dr = (dr+rot)%4
+            ci,cj = si,sj
+            while True:
+                ci,cj = ci+di[dr], cj+dj[dr]
+                if arr[ci][cj]==6:  # 벽이면 그만 뻗어감
                     break
-                # 0일 경우
-                else:
+                v[ci][cj]=1
 
+    # 사각지대(빈칸 0이고, 미방문) 개수 카운트
+    cnt = 0
+    for i in range(1, N+1):
+        for j in range(1, M+1):
+            if arr[i][j]==0 and v[i][j]==0:
+                cnt+=1
+    return cnt
 
-# for i in N:
-#     for j in M:
-#         if graph[i][j] == 1:
-#             pass
-#         elif graph[i][j] == 2:
-#             pass
-#         elif graph[i][j] == 3:
-#             pass
-#         elif graph[i][j] == 4:
-#             pass
-#         elif graph[i][j] == 5:
-#             pass
+def dfs(n, tlst):
+    global ans
+    if n==CNT:      # 모든 cctv의 방향(0~3) 정하기 완료
+        ans = min(ans, cal(tlst))
+        return
+
+    dfs(n+1, tlst+[0])  #   0도 회전
+    dfs(n+1, tlst+[1])  #  90도 회전
+    dfs(n+1, tlst+[2])  # 180도 회전
+    dfs(n+1, tlst+[3])  # 270도 회전
+
+N, M = map(int, input().split())
+# 벽(6번)으로 가장 자리를 막음
+arr = [[6]*(M+2)]+[[6]+list(map(int, input().split()))+[6] for _ in range(N)]+[[6]*(M+2)]
+
+# 1번~5번 CCTV를 저장
+lst = []
+for i in range(1, N+1):
+    for j in range(1, M+1):
+        if 1<=arr[i][j]<=5:
+            lst.append((i,j))
+
+CNT = len(lst)
+ans = N*M
+dfs(0, [])
+print(ans)

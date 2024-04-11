@@ -6,15 +6,15 @@ for _ in range(N):
     _arr = list(map(int, input().rstrip().split()))
     W.append(_arr)
 
-visited = []
+
 _min = sys.maxsize
 def dfs(st, en, cost, visited):
     global _min
     if len(visited) == N:
+        print(visited)
         if W[en][st]:
             _min = min(_min, cost + W[en][st])
-        return
-    
+        return    
     for i in range(N):
         if W[en][i] and i not in visited:
             visited.append(i)
@@ -23,5 +23,5 @@ def dfs(st, en, cost, visited):
 
 for i in range(N):
     dfs(i,i,0,[i])
+    
 print(_min)
-
