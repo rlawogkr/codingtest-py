@@ -1,9 +1,9 @@
-visited = 1
-next = 2
-print(1 << next)
+from itertools import combinations
 
-print(visited | (1 << next))
+n = int(input())
+for comb in combinations(range(0, n), n // 2):
+    a_team = list(comb)
+    b_team = [i for i in range(0, n) if i not in a_team]
 
-
-dic = {(2, 7): 20, (3, 11): 15, (1, 3): 25, (1, 7): 18, (3, 13): 13, (2, 5): 25, (1, 11): 15, (2, 13): 18, (3, 9): 23, (0, 1): 35}
-print(dic[2,7])
+    print(a_team)
+    print(b_team)
