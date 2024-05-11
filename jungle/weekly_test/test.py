@@ -1,3 +1,7 @@
-words = ["hot", "dot", "dog", "lot", "log", "cog"]
-adj_list = [[] for _ in range(5)]
-print(adj_list)
+val = 0
+n_val = 1
+nn_val = -1
+
+if val: print(0)
+if n_val: print(1)
+if nn_val: print(-1)
