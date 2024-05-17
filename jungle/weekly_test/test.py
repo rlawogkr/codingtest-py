@@ -1,7 +1,9 @@
-val = 0
-n_val = 1
-nn_val = -1
+list_arr = [9,2,3,4]
 
-if val: print(0)
-if n_val: print(1)
-if nn_val: print(-1)
+def sort_list(lis):
+    res = []
+    for i in range(len(lis)-1, -1, -1):
+        res.append(lis[i])
+    return res
+
+print(sort_list(list_arr))

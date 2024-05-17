@@ -10,7 +10,7 @@ N = int(input()) #짝수.
 #스타트팀/링크팀의 능력치 차이를 최소로 하려고 함.
 graph = [list(map(int, input().split())) for _ in range(N)]
 
-min_val = 1e9 # return값
+min_val = int(1e9) # return값
 
 for comb in combinations(range(0, N), N // 2):
     # [0,1,2]
