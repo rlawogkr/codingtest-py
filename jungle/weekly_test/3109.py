@@ -6,6 +6,7 @@ def input():
 r, c = map(int, input().split()) # r: row, c: column
 graph = [list(input()) for _ in range(r)]
 # 오른쪽 위 대각선, 오른쪽, 오른쪽 아래 대각선
+
 dx = [-1, 0, 1]
 dy = [1, 1, 1]
 def dfs(x, y):
