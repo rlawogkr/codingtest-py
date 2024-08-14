@@ -14,7 +14,7 @@ for _ in range(m):
     graph[st].append(en)
     reverse_graph[en].append(st)
 
-def dfs(graph, v, visited):
+def dfs(graph, v):
     count = 1
     visited[v] = True
     for node in graph[v]:
