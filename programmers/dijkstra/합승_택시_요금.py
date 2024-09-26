@@ -8,6 +8,7 @@ def solution(n,s,a,b,fares):
         start, end, cost = fare
         graph[start].append((end, cost))
         graph[end].append((start, cost))
+
     def dijkstra(start):
         dist = [INF] * (n+1)
         dist[start] = 0
@@ -24,6 +25,7 @@ def solution(n,s,a,b,fares):
                     heappush(q, (new_cost, i[0]))
         return dist
     dist = [dijkstra(i) for i in range(n+1)]
+
     for i in range(1, n+1):
         answer = min(answer, dist[s][i] + dist[i][a] + dist[i][b])
 
