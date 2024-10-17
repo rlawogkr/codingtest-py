@@ -1,25 +1,24 @@
-# 재귀 check
+def solution(line):
+    answer = ""
+    n = len(line)
+    i = 0
 
-adj_list = [[1, 2], [3, 4], [5, 6], [7], [8], [], [9], [], [], [10], []]
-info = [0,1,0,1,1,0,1,0,0,1,0]
-def dfs(cur_idx, visited, adj_list, info):
-    cur_sheep = 0
-    cur_wolf = 0
-    visited[cur_idx] = True
+    while i<n:
+        if line[i].isupper(): # 대문자일 경우
+            answer += line[i]
+            i += 1
 
-    for next_idx in adj_list[cur_idx]:
-        if not visited[next_idx]:
-            if info[next_idx] == 0:
-                cur_sheep += dfs(next_idx, visited, adj_list, info)[0]
-            else:
-                cur_wolf += dfs(next_idx, visited, adj_list, info)[1]
+            # 대문자가 연속되면 계속 진행
+            while i<n and line[i].isupper():
+                if i+1 < n and line[i+1].islower():
+                    break
+                i += 1
 
-    if info[cur_idx] == 0:
-        cur_sheep += 1
-    else:
-        cur_wolf += 1
+            # 소문자가 있으면 해당 단어 끝까지 이동
+            while i<n and line[i].islower():
+                i += 1
+        else:
+            i += 1
+    return answer
 
-    return cur_sheep, cur_wolf
-
-
-
+print(solution("OneHundredPeopleFromUSAAndMexico"))
